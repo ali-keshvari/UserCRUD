@@ -1,0 +1,95 @@
+﻿@model UserCRUD.Application.Models.DTOs.File.File_List_Response_Dto
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h6 class="modal-title">لیست فایل های کاربر</h6>
+        <button onclick="hideModal()" type="button" class="btn btn-sm btn-close m-0 p-0" data-dismiss="modal" aria-hidden="true"></button>
+    </div>
+    <div class="container p-3">
+        <table class="table table-responsive table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>نام فایل</th>
+                    <th>لینک دانلود</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="tblBody">
+                @if (Model.Files.Count < 1)
+                {
+                    <tr>
+                        <td colspan="5">فایلی یافت نشد</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var file in Model.Files)
+                    {
+                        <tr>
+                            <td>@file.FileName</td>
+                            <td><a href="@file.Path" download>دانلود فایل</a></td>
+                            <td>
+                                <button type="button" class="btn btn-danger mb-2" onClick="DeleteFile('@file.Id')">حذف</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function DeleteFile(id) {
+        Swal.fire({
+            text: "آیا از حذف این فایل اطمینان دارید؟",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "انصراف",
+            confirmButtonText: "تایید"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new Object();
+                formData.id = id
+                $.ajax({
+                    url: "file/Delete",
+                    data: formData,
+                    type: 'post',
+                    success: function (response) {
+                        console.log(response)
+                        if (response.ok) {
+                            Swal.fire({
+                                title: "حذف شد!",
+                                text: response.messages.fa,
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            }).then(function () {
+                                window.location.href = "@Url.Action("Index", "Home")";
+                            });
+                            return;
+                        }
+                        Swal.fire({
+                            title: "خطا!",
+                            text: response.messages.fa,
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "خطا!",
+                            text: "خطایی در سمت سرور به وجود آمده است",
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>

@@ -1,0 +1,48 @@
+﻿@model UserCRUD.Application.Features.User.Command.Update.User_Update_Command
+@{
+}
+
+<div class="modal-content">
+	<form asp-controller="Home" asp-action="Edit"
+		  method="post"
+		  data-ajax="true"
+		  data-callback=""
+		  data-action="Refresh"
+		  enctype="multipart/form-data">
+		<div class="modal-header">
+			<h6 class="modal-title" id="myModalLabel">ویرایش کاربر</h6>
+			<button onclick="hideModal()" type="button" class="btn btn-close p-0 m-0" data-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<input type="hidden" value="@Model.Id"/>
+			<div class="mb-2">
+				<label asp-for="FirstName"></label>
+				<input type="text" asp-for="FirstName" class="form-control" placeholder="لطفا نام کاریر را وارد نمایید" />
+				<span asp-validation-for="FirstName" class="text-danger"></span>
+			</div>
+			<div class="mb-2">
+				<label asp-for="LastName"></label>
+				<input type="text" asp-for="LastName" class="form-control" placeholder="لطفا نام خانوادگی کاربر را وارد نمایید" />
+				<span asp-validation-for="LastName" class="text-danger"></span>
+			</div>
+			<div class="mb-2">
+				<label asp-for="NationalCode"></label>
+				<input type="number" asp-for="NationalCode" class="form-control" placeholder="لطفا کدملی کاربر را وارد نمایید" />
+				<span asp-validation-for="NationalCode" class="text-danger"></span>
+			</div>
+			<div class="mb-2">
+				<label asp-for="PersonalCode"></label>
+				<input type="number" asp-for="PersonalCode" class="form-control" placeholder="لطفا کدپرسنلی کاربر را وارد نمایید" />
+				<span asp-validation-for="PersonalCode" class="text-danger"></span>
+			</div>
+			<div class="mb-2">
+				<label asp-for="MultipleFiles"></label>
+				<input type="file" asp-for="MultipleFiles" multiple accept=".pdf,.txt,.doc,.docx" class="form-control" />
+				<span asp-validation-for="MultipleFiles" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="submit" class="btn btn-success">تایید</button>
+		</div>
+	</form>
+</div>

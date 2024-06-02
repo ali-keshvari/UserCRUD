@@ -1,0 +1,128 @@
+﻿@model UserCRUD.Application.Models.DTOs.User.User_List_Response_Dto
+
+
+<div class="container">
+    <a class="btn btn-success" href="#showmodal=@Url.Action("Add","Home")">ایجاد کاربر جدید</a>
+    <a class="btn btn-secondary float-end" asp-controller="Report" asp-action="GetExcel">خروجی اکسل</a>
+    <a class="btn btn-secondary mx-1 float-end" asp-controller="Report" asp-action="GetPdf">خروجی pdf</a>
+
+    <table class="table table-responsive table-hover mt-5">
+        <thead class="table-dark">
+            <tr>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
+                <th>کدملی</th>
+                <th>کدپرسنلی</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody id="tblBody">
+            @if (Model.Users.Count < 1)
+            {
+                <tr>
+                    <td class="text-center" colspan="5">کاربری یافت نشد</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.NationalCode</td>
+                        <td>@user.PersonalCode</td>
+                        <td>
+                            <a class="btn btn-sm btn-warning mb-2" href="#showmodal=@Url.Action("Edit", "Home", new { id = user.Id })">ویرایش</a>
+                            <a class="btn btn-sm btn-info mb-2" href="#showmodal=@Url.Action("Index", "File",new{id = user.Id})"> مشاهده فایل ها</a>
+                            <button type="button" class="btn btn-sm btn-danger mb-2" onClick="Delete('@user.Id','@user.FirstName @user.LastName')">حذف</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <nav class="float-end">
+        <ul class="pagination my-auto">
+            <li class="page-item @(Model.HasPrevious ? string.Empty : "disabled")">
+                <a class="page-link"
+                   asp-controller="Home"
+                   asp-action="Index"
+                   asp-route-page="@(Model.CurrentPage - 1)">قبلی</a>
+            </li>
+            @for (int i = Model.FirstPage; i <= Model.LastPage; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : string.Empty)">
+                    <a class="page-link"
+                       asp-controller="Home"
+                       asp-action="Index"
+                       asp-route-page="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNext ? string.Empty : "disabled")">
+                <a class="page-link"
+                   asp-controller="Home"
+                   asp-action="Index"
+                   asp-route-page="@(Model.CurrentPage + 1)">بعدی</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script>
+    function Delete(id, fullName) {
+        debugger;
+
+        Swal.fire({
+            title: "هشدار",
+            text: "آیا از حذف " + fullName + " اطمینان دارید؟",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "انصراف",
+            confirmButtonText: "تایید"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                debugger;
+                var formData = new Object();
+                formData.id = id;
+                $.ajax({
+                    url: "home/Delete",
+                    data: formData,
+                    type: 'post',
+                    success: function (response) {
+                        if (response.ok) {
+                            Swal.fire({
+                                title: "حذف شد!",
+                                text: response.messages.fa,
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            }).then(function () {
+                                window.location.href = "@Url.Action("Index", "Home")";
+                            });
+                            return;
+                        }
+                        Swal.fire({
+                            title: "خطا!",
+                            text: response.messages.fa,
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "خطا!",
+                            text: "خطایی در سمت سرور به وجود آمده است",
+                            icon: "error",
+                            timer: 2000,
+                            showConfirmButton: false,
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>
