@@ -7,6 +7,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Features\Auth\**" />
+	  <Compile Remove="Features\File\Command\Update\**" />
+	  <EmbeddedResource Remove="Features\Auth\**" />
+	  <EmbeddedResource Remove="Features\File\Command\Update\**" />
+	  <None Remove="Features\Auth\**" />
+	  <None Remove="Features\File\Command\Update\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 		<PackageReference Include="DNTPersianUtils.Core" Version="6.3.0" />
@@ -24,14 +33,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\UserCRUD.Domain\UserCRUD.Domain.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Features\Auth\Command\Forgot\" />
-	  <Folder Include="Features\Auth\Command\Login\" />
-	  <Folder Include="Features\Auth\Command\Logout\" />
-	  <Folder Include="Features\Auth\Command\Register\" />
-	  <Folder Include="Features\File\Command\Update\" />
 	</ItemGroup>
 
 </Project>

@@ -28,11 +28,9 @@ namespace UserCRUD.Application.Features.User.Command.Create
 
         public async Task<User_Create_Response_Dto> Handle(User_Create_Command request, CancellationToken cancellationToken)
         {
-            var model = (await _mediator.Send(new User_Get_Query()
-            {
-                PersonalCode = request.PersonalCode,
-                NationalCode = request.NationalCode,
-            })).Users.FirstOrDefault();
+            var model = (await _userRepository.GetAsync(
+                predicate: (u => !u.IsDeleted && (u.PersonalCode == request.PersonalCode || u.NationalCode == request.NationalCode))
+                )).Items.FirstOrDefault();
 
             if (model != null)
             {

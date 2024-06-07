@@ -37,12 +37,16 @@ namespace UserCRUD.Application.Features.User.Command.Update
                 return new User_Update_Responce_Dto(ResponseCodeEnum.RecordNotFound);
             }
 
-            var user = await _userRepository.GetByPropertyAsync(new User_Get_Query()
-            {
-                PersonalCode = request.PersonalCode,
-                NationalCode = request.NationalCode,
-                DeniedId = request.Id
-            });
+            //var user = await _userRepository.GetByPropertyAsync(new User_Get_Query()
+            //{
+            //    PersonalCode = request.PersonalCode,
+            //    NationalCode = request.NationalCode,
+            //    DeniedId = request.Id
+            //});
+
+            var user = (await _userRepository.GetAsync(
+                predicate: (u => !u.IsDeleted && !Equals(u.Id,request.Id) && (u.PersonalCode == request.PersonalCode || u.NationalCode == request.NationalCode))
+                )).Items.FirstOrDefault();
 
             if (user != null)
             {

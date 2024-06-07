@@ -49,26 +49,11 @@ public class UserRepository : Repository<User, Guid, User_Get_Query>, IUserRepos
         }
         if (!string.IsNullOrEmpty(search.PersonalCode))
         {
-            if (search.DeniedId != null && search.DeniedId != Guid.Empty)
-            {
-                condition = condition.Or(u => Equals(u.PersonalCode, search.PersonalCode) && !u.IsDeleted && !Equals(u.Id,search.DeniedId));
-            }
-            else
-            {
-                condition = condition.Or(u => Equals(u.PersonalCode, search.PersonalCode) && !u.IsDeleted);
-            }
-            
+            condition = condition.And(u => Equals(u.PersonalCode, search.PersonalCode));
         }
         if (!string.IsNullOrEmpty(search.NationalCode))
         {
-            if (search.DeniedId != null && search.DeniedId != Guid.Empty)
-            {
-                condition = condition.Or(u => Equals(u.NationalCode, search.NationalCode) && !u.IsDeleted && !Equals(u.Id, search.DeniedId));
-            }
-            else
-            {
-                condition = condition.Or(u => Equals(u.NationalCode, search.NationalCode) && !u.IsDeleted);
-            }
+            condition = condition.And(u => Equals(u.NationalCode, search.NationalCode));
         }
         return condition;
     }
